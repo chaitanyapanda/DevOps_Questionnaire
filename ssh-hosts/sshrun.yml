@@ -1,0 +1,23 @@
+---
+- hosts: ssh_servers
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: install openssh on RHEL Servers
+      yum:
+        name: openssh-server
+        state: latest
+      when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red HatEnterprise Linux'
+
+    - name: install ssh on Debian Servers
+      apt:
+        name: openssh-server
+        state: latest
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+    - name: Disable password authentication
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regex: "^PasswordAuthentication*"
+        line: "PasswordAuthentication no"
+        state: present
