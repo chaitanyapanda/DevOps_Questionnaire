@@ -8,16 +8,30 @@
         name: openssh-server
         state: latest
       when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red HatEnterprise Linux'
+      register: package_state
 
     - name: install ssh on Debian Servers
       apt:
         name: openssh-server
         state: latest
       when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-
+      register: package_state
+      
     - name: Disable password authentication
       lineinfile:
         dest: /etc/ssh/sshd_config
         regex: "^PasswordAuthentication*"
         line: "PasswordAuthentication no"
         state: present
+     register: config_state
+ 
+    - name: Start sshd
+      service:
+        name: sshd
+        state: running
+        
+    - name: restart sshd
+      service:
+        name: sshd
+        state: restarted
+      when: config_state.changed or package_state.changed
