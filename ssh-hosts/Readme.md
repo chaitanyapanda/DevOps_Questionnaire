@@ -11,5 +11,8 @@ pandachaitanya1c
 pandachaitanya2c
 pandachaitanya3c
 ```
-5. Run the below command using the hosts file: 
+5. Run the below command using the hosts file:  <br>
 `ansible-playbook -i hosts --private-key ~/developer_key sshrun.yml`
+I enabled the Password-less sudo for the `developer` user on my server to run the above command. If your `developer` user doesnt has the password-less sudo. Run the below command instead of above one. <br>
+`ansible-playbook -i hosts --private-key ~/developer_key sshrun.yml -k` <br>
+`-k -> Prompts for sudo password while executing the command`
